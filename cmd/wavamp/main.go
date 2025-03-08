@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/go-audio/wav"
+	audioampgenerator "github.com/keithjdanielson/audio-amplitude-generator"
 )
 
 func main() {
@@ -24,14 +25,20 @@ func main() {
 	}
 	decoder.ReadInfo()
 
-	// Run generate amplitudes function.
-	amplitudes, err := GenerateAmplitudeData(decoder)
+	// Create analyzer with default configuration
+	analyzer := audioampgenerator.NewDefaultAnalyzer()
+	/*
+	analyzer := wavamp.NewAnalyzer(wavamp.Config{
+		UseLogScale:  false,
+		ResolutionMs: 256,
+		BufferSize:   8192,
+	})
+	*/
+
+	amplitudes, err := analyzer.GenerateAmplitudeData(decoder)
 	if err != nil {
 		fmt.Printf("Error generating amplitude data: %v\n", err)
 		return
 	}
-
 	fmt.Print("Amplitudes: ", amplitudes)
 }
-
-
