@@ -16,16 +16,22 @@ func main() {
 	}
 	defer file.Close()
 
+	// Using wav library, create a decoder for our file.
 	decoder := wav.NewDecoder(file)
 	if !decoder.IsValidFile() {
 		fmt.Println("Invalid WAV file")
 		return
 	}
+	decoder.ReadInfo()
 
-	fmt.Println("WAV Header Information:")
-	fmt.Printf("Audio Format: %d (1 = PCM)\n", decoder.WavAudioFormat)
-	fmt.Printf("Number of Channels: %d\n", decoder.NumChans)
-	fmt.Printf("Sample Rate: %d Hz\n", decoder.SampleRate)
-	fmt.Printf("Bits Per Sample: %d-bit\n", decoder.BitDepth)
-	fmt.Printf("Average Bytes Per Second: %d\n", decoder.AvgBytesPerSec)
+	// Run generate amplitudes function.
+	amplitudes, err := GenerateAmplitudeData(decoder)
+	if err != nil {
+		fmt.Printf("Error generating amplitude data: %v\n", err)
+		return
+	}
+
+	fmt.Print("Amplitudes: ", amplitudes)
 }
+
+
